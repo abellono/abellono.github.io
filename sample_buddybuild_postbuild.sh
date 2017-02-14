@@ -21,7 +21,9 @@ TITLE="Roomservice"
 # Make sure we are in the right directory
 cd "$BUDDYBUILD_WORKSPACE" || exit
 
-if [[ "$BUDDYBUILD_BRANCH" =~ "$BRANCH_TO_UPLOAD" ]]; then
+if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
+
+	echo "Uploading $BUDDYBUILD_BRANCH."
 	
 	BUILD_VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBuildVersion" "$INFO_PLIST_PATH")
 	BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print CFBuildNumber" "$INFO_PLIST_PATH")
@@ -41,7 +43,7 @@ if [[ "$BUDDYBUILD_BRANCH" =~ "$BRANCH_TO_UPLOAD" ]]; then
 	# Create the product folder - BUDDYBUILD_BUILD_ID is unique, so we won't overwrite
 	CURRENT_BUILD_DEST_DIR="$BUNDLE_IDENTIFIER"/"$BUILD_VERSION"."$BUILD_NUMBER"/"$BUDDYBUILD_BUILD_ID"
 	mkdir -p "$CURRENT_BUILD_DEST_DIR"/
-	cd $CURRENT_BUILD_DEST_DIR/ || exit
+	cd "$CURRENT_BUILD_DEST_DIR"/ || exit
 
 	# Copy the IPA into the current folder
 	cp "$BUDDYBUILD_IPA_PATH" "."
@@ -49,8 +51,7 @@ if [[ "$BUDDYBUILD_BRANCH" =~ "$BRANCH_TO_UPLOAD" ]]; then
 	# Copy the template manifest file into the current folder with another name
 	cp "$BUDDYBUILD_WORKSPACE"/"$UPLOAD_FOLDER_DIR"/manifest-default.plist "./manifest.plist"
 
-	# Replace default values in 
-
+	# Replace default values in plist
 	LINK_REPLACE_STRING=@@@@LINK@@@@
 	BUNDLE_VERSION_REPLACE_STRING=@@@@VERSION@@@@
 	BUNDLE_IDENTIFIER_REPLACE_STRING=@@@@BUNDLEIDENTIFIER@@@@
@@ -67,4 +68,6 @@ if [[ "$BUDDYBUILD_BRANCH" =~ "$BRANCH_TO_UPLOAD" ]]; then
 	git add ./*
 	git commit -m "Buddybuild: Uploaded IPA for $BUNDLE_IDENTIFIER -> $BUILD_VERSION.$BUILD_NUMBER"
 	git push origin master
+else
+	echo "Not configured to upload to abello-web on $BUDDYBUILD_BRANCH. Currently only uploading on $BRANCH_TO_UPLOAD"
 fi
