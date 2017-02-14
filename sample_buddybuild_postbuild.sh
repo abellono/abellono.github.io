@@ -7,7 +7,7 @@
 # 4. By default, this only uploads builds that are on the master branch - change BRANCH_TO_UPLOAD if needed
 # 5. App icons are expected to be located in the top level bundle identifier folder called 57.png and 512.png
 #		For example : App is roomservice -> bundle id is no.abello.roomservicedriverenterprise
-#		Place 57.png and 512.png builds/no.abello.roomservicedriverenterprise/
+#		Place 57.png and 512.png at builds/no.abello.roomservicedriverenterprise/ on abello-web repository
 #		Folder may not exist until first build has been uploaded, but it is ok to generate IPA first then place screenshots in correct folder
 # 6. Change TITLE variable below to correct value
 
