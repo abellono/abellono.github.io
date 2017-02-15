@@ -1,0 +1,5 @@
+net rc file
+
+machine api.github.com
+  login xxx
+  password xxx
