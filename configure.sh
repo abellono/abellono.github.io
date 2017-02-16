@@ -27,6 +27,8 @@ read description
 echo "\nBundle Identifier :"
 read bundle_id
 
+mkdir -p "./builds/$bundle_id"
+
 echo "\n"
 
 NAME_REPLACE_STRING=@@@@NAME@@@@
@@ -46,4 +48,5 @@ git push origin master
 rm "./buddybuild_postbuild.sh"
 cp "./defaults/default_buddybuild_postbuild.sh" "./buddybuild_postbuild.sh"
 
+echo "Please place the apps images (named 512.png and 57.png) inside ./builds/$bundle_id/."
 echo "\nDone! Cut the buddybuild_postbuild.sh script into the root directory of the repository you would like to start uploading to abello-web."
