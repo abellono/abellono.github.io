@@ -2,4 +2,4 @@ theme: jekyll-theme-cayman
 collections:
   apps:
     output: true
-    permalink: /:collection/:path/:title
+    permalink: /:collection/:name/index.html

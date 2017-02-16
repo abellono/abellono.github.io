@@ -1,8 +1,8 @@
 ---
 layout: app
-name: "roomservice"
-title: "Roomservice"
-bundle_id: "no.abello.roomservice"
+name: roomservice
+title: Roomservice
+bundle_id: no.abello.roomservice
 ---
 {% assign matching_builds = site.data | where: "bundle_id", page.bundle_id | group_by: "version" %}
 {% assign sorted_builds = matching_builds | sort: "name" | reverse %}
