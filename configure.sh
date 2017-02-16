@@ -38,3 +38,12 @@ sed -i '' -e "s/$NAME_REPLACE_STRING/$name/g" "_apps/$name.md"
 sed -i '' -e "s/@@@@PAGE_TITLE@@@@/$title/g" "_apps/$name.md"
 sed -i '' -e "s/@@@@PAGE_DESCRIPTION@@@@/$description/g" "_apps/$name.md"
 sed -i '' -e "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$bundle_id/g" "_apps/$name.md"
+
+git add "_apps/$name.md"
+git commit -m "Added $name app"
+git push origin master
+
+rm "./buddybuild_postbuild.sh"
+cp "./defaults/default_buddybuild_postbuild.sh" "./buddybuild_postbuild.sh"
+
+echo "\nDone! Cut the buddybuild_postbuild.sh script into the root directory of the repository you would like to start uploading to abello-web."
