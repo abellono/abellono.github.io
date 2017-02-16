@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-# Instructions :
-# 1. Move to desired repository that uses buddybuild to build
-# 2. Rename to `buddybuild_postbuild.sh`
-# 4. By default, this only uploads builds that are on the master branch - change BRANCH_TO_UPLOAD if needed
-# 5. App icons are expected to be located in the top level bundle identifier folder called 57.png and 512.png
-#     For example : App is roomservice -> bundle id is no.abello.roomservicedriverenterprise
-#     Place 57.png and 512.png at builds/no.abello.roomservicedriverenterprise/ on abello-web repository
-#     Folder may not exist until first build has been uploaded, but it is ok to generate IPA first then place screenshots in correct folder
-
 BRANCH_TO_UPLOAD="master"
 
 # Make sure we are in the right directory
@@ -58,10 +49,10 @@ if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
     IPA_NAME=$(basename "$BUDDYBUILD_IPA_PATH")
     IPA_LINK="https://github.com/abellono/abello-web/blob/master/$BUILD_PRODUCTS_DIR/$CURRENT_BUILD_DEST_DIR/$IPA_NAME"
 
-    sed -i -e "s|$LINK_REPLACE_STRING|$IPA_LINK|g" ./manifest.plist
-    sed -i -e "s/$BUNDLE_VERSION_REPLACE_STRING/$BUILD_VERSION/g" ./manifest.plist
-    sed -i -e "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" ./manifest.plist
-    sed -i -e "s/$NAME_REPLACE_STRING/$NAME/g" ./manifest.plist
+    sed -i '' -e "s|$LINK_REPLACE_STRING|$IPA_LINK|g" ./manifest.plist
+    sed -i '' -e "s/$BUNDLE_VERSION_REPLACE_STRING/$BUILD_VERSION/g" ./manifest.plist
+    sed -i '' -e "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" ./manifest.plist
+    sed -i '' -e "s/$NAME_REPLACE_STRING/$NAME/g" ./manifest.plist
 
     cd "$BASE_REPO_PATH" || exit
 
@@ -72,25 +63,35 @@ if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
     MANIFEST_REPLACE_STRING=@@@@MANIFEST@@@@
     MANIFEST_LOCATION="$BASE_REPO_PATH/$BUILD_PRODUCTS_DIR/$CURRENT_BUILD_DEST_DIR/manifest.plist"
 
-    sed -i -e "s/$NAME_REPLACE_STRING/$NAME/g" "$APP_BUILD_DATA_FILE"
-    sed -i -e "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" "$APP_BUILD_DATA_FILE"
-    sed -i -e "s/$BUNDLE_VERSION_REPLACE_STRING/$BUILD_VERSION/g" "$APP_BUILD_DATA_FILE"
-    sed -i -e "s|$MANIFEST_REPLACE_STRING|$MANIFEST_LOCATION|g" "$APP_BUILD_DATA_FILE"
-    sed -i -e "s/$BUILD_NUMBER_REPLACE_STRING/$BUILD_NUMBER/g" "$APP_BUILD_DATA_FILE"
+    sed -i '' -e "s/$NAME_REPLACE_STRING/$NAME/g" "$APP_BUILD_DATA_FILE"
+    sed -i '' -e "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" "$APP_BUILD_DATA_FILE"
+    sed -i '' -e "s/$BUNDLE_VERSION_REPLACE_STRING/$BUILD_VERSION/g" "$APP_BUILD_DATA_FILE"
+    sed -i '' -e "s|$MANIFEST_REPLACE_STRING|$MANIFEST_LOCATION|g" "$APP_BUILD_DATA_FILE"
+    sed -i '' -e "s/$BUILD_NUMBER_REPLACE_STRING/$BUILD_NUMBER/g" "$APP_BUILD_DATA_FILE"
+
+    FIRST_BUILD=false
 
     if ! [ -f "_apps/$NAME.md" ]; then
+        FIRST_BUILD=true
+
         cp "./defaults/default_app_page.md" "_apps/$NAME.md"
 
         echo "First time building app.... providing sensible defaults."
 
-        sed -i -e "s/$NAME_REPLACE_STRING/$NAME/g" "_apps/$NAME.md"
-        sed -i -e "s/@@@@PAGE_TITLE@@@@/$NAME/g" "_apps/$NAME.md"
-        sed -i -e "s/@@@@PAGE_DESCRIPTION@@@@/$NAME's app download page./g" "_apps/$NAME.md"
-        sed -i -e "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" "_apps/$NAME.md"
+        sed -i '' -e "s/$NAME_REPLACE_STRING/$NAME/g" "_apps/$NAME.md"
+        sed -i '' -e "s/@@@@PAGE_TITLE@@@@/$NAME/g" "_apps/$NAME.md"
+        sed -i '' -e "s/@@@@PAGE_DESCRIPTION@@@@/$NAME's app download page./g" "_apps/$NAME.md"
+        sed -i '' -e "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" "_apps/$NAME.md"
     fi
 
     git add ./*
-    git commit -m "Buddybuild: Uploaded IPA for $BUNDLE_IDENTIFIER -> $BUILD_VERSION.$BUILD_NUMBER"
+
+    if $FIRST_BUILD ; then
+        git commit -m "Buddybuild: Uploaded IPA for $BUNDLE_IDENTIFIER -> $BUILD_VERSION.$BUILD_NUMBER (ATTENTION : PLEASE UPDATE THE APP'S WEBPAGE AT _apps/$NAME.md)"
+    else
+        git commit -m "Buddybuild: Uploaded IPA for $BUNDLE_IDENTIFIER -> $BUILD_VERSION.$BUILD_NUMBER"
+    fi
+
     git push origin master
 else
     echo "Not configured to upload to abello-web on $BUDDYBUILD_BRANCH. Currently only uploading on $BRANCH_TO_UPLOAD"
