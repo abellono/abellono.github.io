@@ -1,0 +1,125 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    font: 20px/1.25 'Proxima-Nova-Regular', sans-serif;
+    color: #222e4e;
+    background-color: #f5f4ee;
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 1200px;
+    text-align: center;
+    padding: 90px 30px;
+}
+
+.logo {
+    width: 100%;
+    height: auto;
+    max-width: 806px;
+    margin-bottom: 60px;
+}
+
+.text {
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.text h1 {
+    font-size: 42px;
+    margin-bottom: 30px;
+    white-space: nowrap;
+}
+
+.text p {
+    margin-bottom: 30px;
+}
+
+.text .contacts {
+    font-family: 'Proxima-Nova-Bold';
+    margin-bottom: 40px;
+}
+
+.text .contacts span {
+    display: inline-block;
+    margin-bottom: 0.25em;
+}
+
+.text .contacts a {
+    display: inline-block;
+    margin-bottom: 0.25em;
+    margin-left: 0.25em;
+    color: #5498d8;
+    text-decoration: none;
+}
+
+.text hr {
+    width: 90%;
+    border: 0;
+    height: 1px;
+    background: #222e4e;
+    margin-bottom: 60px;
+}
+
+.text .github {
+    width: 139px;
+    height: 38px;
+    display: inline-block;
+    background: url('../images/GitHub-logo.svg') no-repeat 0 0;
+    background-size: 100% auto;
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 18px;
+    }
+
+    .container {
+        padding-top: 30px;
+    }
+
+    .logo {
+        margin-bottom: 30px;
+    }
+
+    .text h1 {
+        font-size: 30px;
+        margin-bottom: 15px;
+    }
+
+    .text p {
+        margin-bottom: 15px;
+    }
+
+    .text .contacts {
+        margin-bottom: 20px;
+    }
+
+    .text .contacts span {
+        display: block;
+    }
+
+    .text .contacts a {
+        margin-bottom: 1em;
+    }
+
+    .text hr {
+        margin-bottom: 45px;
+    }
+
+    .text .github {
+        width: 100px;
+        height: 27px;
+    }
+}
