@@ -1,0 +1,31 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+.instructions {
+  padding-bottom: 0;
+}
+
+.center {
+  text-align: center;
+}
+
+.versions {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  padding-top: 10%;
+}
+
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+  width: auto;
+  display: table;
+}
+
+.btn.install {
+  color: #ffffff;
+  background-color: #159957;
+}

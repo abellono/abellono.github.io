@@ -1,4 +1,7 @@
 theme: jekyll-theme-cayman
+title: Abello Enterprise Distribution
+kramdown:
+  parse_block_html: true
 collections:
   apps:
     output: true

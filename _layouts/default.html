@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page.title | default: site.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+</head>
+<body>
+<section class="page-header">
+    <h1 class="project-name">{{ page.title | default: site.github.repository_name }}</h1>
+    <h2 class="project-tagline">{{ page.description | default: site.github.project_tagline }}</h2>
+</section>
+<section class="main-content instructions">
+    <ul>
+        <li>Denne test-versjonen av Roomservice krever iOS 9 og en iPhone 5S eller nyere.</li>
+        <li>Hadde du en tidligere versjon av appen installert, vennligst avinstaller denne først!</li>
+        <li>Klikk på knappen over for å innstallere appen</li>
+        <li>For å fullføre installasjonen må du legge til Abello AS sin profil i telefonens innstillinger</li>
+        <ul>
+            <li>Gå Innstillinger</li>
+            <li>Gå til Generelt</li>
+            <li>Gå til Profiler og enheter</li>
+            <li>Klikk på Abello AS</li>
+            <li>Godta Abello AS profilen</li>
+        </ul>
+    </ul>
+</section>
+<section class="main-content">
+    {{ content }}
+    <footer class="site-footer">
+        {% if site.github.is_project_page %}
+        <span>This page is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a>.</span>
+        {% endif %}
+    </footer>
+</section>
+
+{% if site.google_analytics %}
+<script type="text/javascript">
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('create', '{{ site.google_analytics }}', 'auto');
+    ga('send', 'pageview');
+</script>
+{% endif %}
+</body>
+</html>
