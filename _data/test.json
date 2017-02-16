@@ -1,0 +1,7 @@
+{
+  "name": "Roomservice",
+  "bundle_id": "no.abello.roomservice",
+  "version": "1.3",
+  "build": "1",
+  "manifest": "http://google.com/"
+}
