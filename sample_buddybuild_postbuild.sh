@@ -11,24 +11,14 @@
 #		Folder may not exist until first build has been uploaded, but it is ok to generate IPA first then place screenshots in correct folder
 # 6. Change TITLE variable below to correct value
 
-INFO_PLIST_PATH="/app/Supporting Files/roomservice-ios-driver-Info.plist"
+INFO_PLIST_PATH="./app/Supporting Files/roomservice-ios-driver-Info.plist"
 BRANCH_TO_UPLOAD="master"
-TITLE="Roomservice"
-
-LINK_REPLACE_STRING=@@@@LINK@@@@
-NAME_REPLACE_STRING=@@@@NAME@@@@
-BUNDLE_IDENTIFIER_REPLACE_STRING=@@@@BUNDLEIDENTIFIER@@@@
-BUNDLE_VERSION_REPLACE_STRING=@@@@VERSION@@@@
-BUNDLE_BUILD_REPLACE_STRING=@@@@BUILD@@@@
-MANIFEST_LOCATION_REPLACE_STRING=@@@@MANIFEST@@@@
 
 # Upload debugging symbols to Fabric
 "$BUDDYBUILD_WORKSPACE"/Pods/Fabric/upload-symbols -a dc8341530c018e7f89c4dc26f8445bd2d89d0e30 -p ios "$BUDDYBUILD_PRODUCT_DIR"
 
 # Make sure we are in the right directory
 cd "$BUDDYBUILD_WORKSPACE" || exit
-
-env | awk -F "=" '{print $1}' | grep ".*BUDDY.*"
 
 if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
 
@@ -37,11 +27,12 @@ if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
 	BUILD_VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBuildVersion" "$INFO_PLIST_PATH")
 	BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print CFBuildNumber" "$INFO_PLIST_PATH")
 	BUNDLE_IDENTIFIER=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" "$INFO_PLIST_PATH")
+	NAME=$(/usr/libexec/PlistBuddy -c "Print \"Bundle display name\" $INFO_PLIST_PATH")
 
 	UPLOAD_FOLDER_DIR="upload-to-github"
 	BUILD_PRODUCTS_DIR="builds"
-
 	BASE_REPO_PATH="$BUDDYBUILD_WORKSPACE"/"$UPLOAD_FOLDER_DIR"
+	DEFAULTS_FOLDER="$BASE_REPO_PATH/defaults"
 
 	# Create and change into upload folder that we will copy the IPA into
 	git clone -b master --depth 1 git@github.com:abellono/abello-web.git $UPLOAD_FOLDER_DIR
@@ -60,39 +51,47 @@ if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
 	cp "$BUDDYBUILD_IPA_PATH" "."
 
 	# Copy the template manifest file into the current folder with another name
-	cp "$BUDDYBUILD_WORKSPACE"/"$UPLOAD_FOLDER_DIR"/manifest-default.plist "./manifest.plist"
+	cp "$DEFAULTS_FOLDER"/manifest_default.plist "./manifest.plist"
 
-	# Replace default values in manifest.plist
+	# Replace default values in plist
+	LINK_REPLACE_STRING=@@@@LINK@@@@
+	BUNDLE_VERSION_REPLACE_STRING=@@@@VERSION@@@@
+	BUNDLE_IDENTIFIER_REPLACE_STRING=@@@@BUNDLE_IDENTIFIER@@@@
+	NAME_REPLACE_STRING=@@@@NAME@@@@
+
 	IPA_NAME=$(basename "$BUDDYBUILD_IPA_PATH")
-	IPA_LINK=https://github.com/abellono/abello-web/blob/master/"$BUILD_PRODUCTS_DIR"/"$CURRENT_BUILD_DEST_DIR"/"$IPA_NAME"
+	IPA_LINK="https://github.com/abellono/abello-web/blob/master/$BUILD_PRODUCTS_DIR/$CURRENT_BUILD_DEST_DIR/$IPA_NAME"
 
+	sed -ie "s/$LINK_REPLACE_STRING/$IPA_LINK/g" ./manifest.plist
 	sed -ie "s/$BUNDLE_VERSION_REPLACE_STRING/$BUILD_VERSION/g" ./manifest.plist
 	sed -ie "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" ./manifest.plist
-	sed -ie "s/$NAME_REPLACE_STRING/$TITLE/g" ./manifest.plist
-
-	sed -ie "s|$LINK_REPLACE_STRING|$IPA_LINK|g" ./manifest.plist
+	sed -ie "s/$NAME_REPLACE_STRING/$NAME/g" ./manifest.plist
 
 	cd "$BASE_REPO_PATH" || exit
 
-    # If this is the first build of this app, add it to the top level app data file
-	if [ -z $(grep "$BUNDLE_IDENTIFIER" "default_app.yml") ]; then
-	   echo "$BUNDLE_IDENTIFIER" >> "_data/default_app.yml"
-	fi
+	APP_BUILD_DATA_FILE="./_data/$TITLE-$BUILD_VERSION.$BUILD_NUMBER-$BUDDYBUILD_BUILD_ID.json"
+	cp "./defaults/default_app_build_data.json" "$APP_BUILD_DATA_FILE"
 
-	mkdir "_data/$BUNDLE_IDENTIFIER/"
-
-	APP_BUILD_DATA_FILE="_data/$BUNDLE_IDENTIFIER/$TITLE-$BUILD_VERSION.$BUILD_NUMBER-$BUDDYBUILD_BUILD_ID.json"
-	cp "default_app_build_data.json" "$APP_BUILD_DATA_FILE"
-
+	BUILD_NUMBER_REPLACE_STRING=@@@@BUILD@@@@
+	MANIFEST_REPLACE_STRING=@@@@MANIFEST@@@@
 	MANIFEST_LOCATION="$BASE_REPO_PATH/$BUILD_PRODUCTS_DIR/$CURRENT_BUILD_DEST_DIR/manifest.plist"
 
-	sed -ie "s/$NAME_REPLACE_STRING/$TITLE/g" "$APP_BUILD_DATA_FILE"
-	sed -ie "s/$BUNDLE_ID_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" "$APP_BUILD_DATA_FILE"
-	sed -ie "s/$VERSION_REPLACE_STRING/$BUILD_VERSION/g" "$APP_BUILD_DATA_FILE"
+	sed -ie "s/$NAME_REPLACE_STRING/$NAME/g" "$APP_BUILD_DATA_FILE"
+	sed -ie "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" "$APP_BUILD_DATA_FILE"
+	sed -ie "s/$BUNDLE_VERSION_REPLACE_STRING/$BUILD_VERSION/g" "$APP_BUILD_DATA_FILE"
+	sed -ie "s/$MANIFEST_REPLACE_STRING/$MANIFEST_LOCATION/g" "$APP_BUILD_DATA_FILE"
 	sed -ie "s/$BUILD_NUMBER_REPLACE_STRING/$BUILD_NUMBER/g" "$APP_BUILD_DATA_FILE"
 
-	# MANIFEST_LOCATION contains the '/' character, so we use different escape characters
-	sed -ie "s|$MANIFEST_REPLACE_STRING|$MANIFEST_LOCATION|g" "$APP_BUILD_DATA_FILE"
+	if ! [ -f "_apps/$NAME.md" ]; then
+	    cp "./defaults/default_app_page.md" "_apps/$NAME.md"
+
+	    echo "First time building app.... providing sensible defaults."
+
+	    sed -ie "s/$NAME_REPLACE_STRING/$NAME/g" "_apps/$NAME.md"
+	    sed -ie "s/@@@@PAGE_TITLE@@@@/$NAME/g" "_apps/$NAME.md"
+	    sed -ie "s/@@@@PAGE_DESCRIPTION@@@@/$NAME's app download page./g" "_apps/$NAME.md"
+	    sed -ie "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" "_apps/$NAME.md"
+	fi
 
 	git add ./*
 	git commit -m "Buddybuild: Uploaded IPA for $BUNDLE_IDENTIFIER -> $BUILD_VERSION.$BUILD_NUMBER"
