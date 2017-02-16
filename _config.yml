@@ -1,6 +1,6 @@
 theme: jekyll-theme-cayman
 title: Abello Enterprise Distribution
-exclude: defaults
+exclude: [defaults]
 kramdown:
   parse_block_html: true
 collections:
