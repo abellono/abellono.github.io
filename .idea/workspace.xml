@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a1240277-cbab-4c5f-9d3d-e5c3ed444110" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sample_buddybuild_postbuild.sh" afterPath="$PROJECT_DIR$/sample_buddybuild_postbuild.sh" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -33,8 +34,8 @@
       <file leaf-file-name="sample_buddybuild_postbuild.sh" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sample_buddybuild_postbuild.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="25" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
+            <state relative-caret-position="653">
+              <caret line="52" column="36" lean-forward="true" selection-start-line="52" selection-start-column="36" selection-end-line="52" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -97,6 +98,8 @@
       <find>DEFAULTS_FOLDER</find>
       <find>BUILDBUILD</find>
       <find>\t</find>
+      <find>pliste</find>
+      <find>sed -ie</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -340,12 +343,12 @@
       <workItem from="1487122800724" duration="684000" />
       <workItem from="1487123650111" duration="625000" />
       <workItem from="1487124355873" duration="2016000" />
-      <workItem from="1487169834227" duration="23733000" />
+      <workItem from="1487169834227" duration="24413000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27058000" />
+    <option name="totallyTimeSpent" value="27738000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="5" y="22" width="3435" height="1418" extended-state="0" />
@@ -716,8 +719,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sample_buddybuild_postbuild.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
+        <state relative-caret-position="653">
+          <caret line="52" column="36" lean-forward="true" selection-start-line="52" selection-start-column="36" selection-end-line="52" selection-end-column="36" />
           <folding />
         </state>
       </provider>

@@ -3,19 +3,13 @@
 # Instructions :
 # 1. Move to desired repository that uses buddybuild to build
 # 2. Rename to `buddybuild_postbuild.sh`
-# 3. Update the INFO_PLIST_PATH variable below and point it to the project's plist
 # 4. By default, this only uploads builds that are on the master branch - change BRANCH_TO_UPLOAD if needed
 # 5. App icons are expected to be located in the top level bundle identifier folder called 57.png and 512.png
 #     For example : App is roomservice -> bundle id is no.abello.roomservicedriverenterprise
 #     Place 57.png and 512.png at builds/no.abello.roomservicedriverenterprise/ on abello-web repository
 #     Folder may not exist until first build has been uploaded, but it is ok to generate IPA first then place screenshots in correct folder
-# 6. Change TITLE variable below to correct value
 
-INFO_PLIST_PATH="./app/Supporting Files/roomservice-ios-driver-Info.plist"
 BRANCH_TO_UPLOAD="master"
-
-# Upload debugging symbols to Fabric
-"$BUDDYBUILD_WORKSPACE"/Pods/Fabric/upload-symbols -a dc8341530c018e7f89c4dc26f8445bd2d89d0e30 -p ios "$BUDDYBUILD_PRODUCT_DIR"
 
 # Make sure we are in the right directory
 cd "$BUDDYBUILD_WORKSPACE" || exit
@@ -24,10 +18,12 @@ if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
 
     echo "Uploading $BUDDYBUILD_BRANCH."
 
-    BUILD_VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "$INFO_PLIST_PATH")
-    BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" "$INFO_PLIST_PATH")
-    BUNDLE_IDENTIFIER=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" "$INFO_PLIST_PATH")
-    NAME=$(/usr/libexec/PlistBuddy -c "Print CFBundleDisplayName $INFO_PLIST_PATH")
+    INFO_PLIST_PATH="$BUDDYBUILD_PRODUCT_DIR/Info.plist"
+
+    BUILD_VERSION=$(/usr/libexec/PlistBuddy -c "Print :ApplicationProperties:CFBundleShortVersionString" "$INFO_PLIST_PATH")
+    BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print :ApplicationProperties:CFBundleVersion" "$INFO_PLIST_PATH")
+    BUNDLE_IDENTIFIER=$(/usr/libexec/PlistBuddy -c "Print :ApplicationProperties:CFBundleIdentifier" "$INFO_PLIST_PATH")
+    NAME=$(/usr/libexec/PlistBuddy -c "Print Name" "$INFO_PLIST_PATH")
 
     UPLOAD_FOLDER_DIR="upload-to-github"
     BUILD_PRODUCTS_DIR="builds"
@@ -62,10 +58,10 @@ if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
     IPA_NAME=$(basename "$BUDDYBUILD_IPA_PATH")
     IPA_LINK="https://github.com/abellono/abello-web/blob/master/$BUILD_PRODUCTS_DIR/$CURRENT_BUILD_DEST_DIR/$IPA_NAME"
 
-    sed -ie "s|$LINK_REPLACE_STRING|$IPA_LINK|g" ./manifest.plist
-    sed -ie "s/$BUNDLE_VERSION_REPLACE_STRING/$BUILD_VERSION/g" ./manifest.plist
-    sed -ie "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" ./manifest.plist
-    sed -ie "s/$NAME_REPLACE_STRING/$NAME/g" ./manifest.plist
+    sed -i -e "s|$LINK_REPLACE_STRING|$IPA_LINK|g" ./manifest.plist
+    sed -i -e "s/$BUNDLE_VERSION_REPLACE_STRING/$BUILD_VERSION/g" ./manifest.plist
+    sed -i -e "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" ./manifest.plist
+    sed -i -e "s/$NAME_REPLACE_STRING/$NAME/g" ./manifest.plist
 
     cd "$BASE_REPO_PATH" || exit
 
@@ -76,21 +72,21 @@ if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
     MANIFEST_REPLACE_STRING=@@@@MANIFEST@@@@
     MANIFEST_LOCATION="$BASE_REPO_PATH/$BUILD_PRODUCTS_DIR/$CURRENT_BUILD_DEST_DIR/manifest.plist"
 
-    sed -ie "s/$NAME_REPLACE_STRING/$NAME/g" "$APP_BUILD_DATA_FILE"
-    sed -ie "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" "$APP_BUILD_DATA_FILE"
-    sed -ie "s/$BUNDLE_VERSION_REPLACE_STRING/$BUILD_VERSION/g" "$APP_BUILD_DATA_FILE"
-    sed -ie "s|$MANIFEST_REPLACE_STRING|$MANIFEST_LOCATION|g" "$APP_BUILD_DATA_FILE"
-    sed -ie "s/$BUILD_NUMBER_REPLACE_STRING/$BUILD_NUMBER/g" "$APP_BUILD_DATA_FILE"
+    sed -i -e "s/$NAME_REPLACE_STRING/$NAME/g" "$APP_BUILD_DATA_FILE"
+    sed -i -e "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" "$APP_BUILD_DATA_FILE"
+    sed -i -e "s/$BUNDLE_VERSION_REPLACE_STRING/$BUILD_VERSION/g" "$APP_BUILD_DATA_FILE"
+    sed -i -e "s|$MANIFEST_REPLACE_STRING|$MANIFEST_LOCATION|g" "$APP_BUILD_DATA_FILE"
+    sed -i -e "s/$BUILD_NUMBER_REPLACE_STRING/$BUILD_NUMBER/g" "$APP_BUILD_DATA_FILE"
 
     if ! [ -f "_apps/$NAME.md" ]; then
         cp "./defaults/default_app_page.md" "_apps/$NAME.md"
 
         echo "First time building app.... providing sensible defaults."
 
-        sed -ie "s/$NAME_REPLACE_STRING/$NAME/g" "_apps/$NAME.md"
-        sed -ie "s/@@@@PAGE_TITLE@@@@/$NAME/g" "_apps/$NAME.md"
-        sed -ie "s/@@@@PAGE_DESCRIPTION@@@@/$NAME's app download page./g" "_apps/$NAME.md"
-        sed -ie "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" "_apps/$NAME.md"
+        sed -i -e "s/$NAME_REPLACE_STRING/$NAME/g" "_apps/$NAME.md"
+        sed -i -e "s/@@@@PAGE_TITLE@@@@/$NAME/g" "_apps/$NAME.md"
+        sed -i -e "s/@@@@PAGE_DESCRIPTION@@@@/$NAME's app download page./g" "_apps/$NAME.md"
+        sed -i -e "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" "_apps/$NAME.md"
     fi
 
     git add ./*
