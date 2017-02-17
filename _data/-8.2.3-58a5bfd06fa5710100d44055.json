@@ -1,7 +1,0 @@
-{
-  "name" : "RS Release",
-  "bundle_id" : "no.abello.roomservicedriverenterprise",
-  "version" : "8.2",
-  "build" : "3",
-  "manifest" : "/Users/buddybuild/workspace/upload-to-github/builds/no.abello.roomservicedriverenterprise/8.2.3/58a5bfd06fa5710100d44055/manifest.plist"
-}

@@ -3,7 +3,7 @@ layout: default
 name: roomservice
 title: Roomservice Driver
 description: The driver management app for Roomservice.no
-bundle_id: no.abello.roomservice
+bundle_id: no.abello.roomservicedriverenterprise
 ---
 {% assign matching_builds = site.data | where: "bundle_id", page.bundle_id | group_by: "version" %}
 {% assign sorted_builds = matching_builds | sort: "name" | reverse %}

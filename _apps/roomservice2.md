@@ -1,9 +1,9 @@
 ---
 layout: default
-name: roomservice2
-title: Test
-description: test
-bundle_id: test.test.test
+name: roomservice
+title: Roomservice Driver
+description: The driver management app for Roomservice.no
+bundle_id: no.abello.roomservice
 ---
 {% assign matching_builds = site.data | where: "bundle_id", page.bundle_id | group_by: "version" %}
 {% assign sorted_builds = matching_builds | sort: "name" | reverse %}
