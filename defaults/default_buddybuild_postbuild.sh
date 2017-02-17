@@ -67,12 +67,15 @@ if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
 
     cd "$BASE_REPO_PATH" || exit
 
+    # Create the data folder if it does not exist
+    [ -d "./_data" ] || mkdir "./_data"
+
     APP_BUILD_DATA_FILE="./_data/$NAME-$BUILD_VERSION.$BUILD_NUMBER-$BUDDYBUILD_BUILD_ID.json"
     cp "./defaults/default_app_build_data.json" "$APP_BUILD_DATA_FILE"
 
     BUILD_NUMBER_REPLACE_STRING=@@@@BUILD@@@@
     MANIFEST_REPLACE_STRING=@@@@MANIFEST@@@@
-    MANIFEST_LOCATION="$BASE_REPO_PATH/$BUILD_PRODUCTS_DIR/$CURRENT_BUILD_DEST_DIR/manifest.plist"
+    MANIFEST_LOCATION="https://github.com/abellono/abellono.github.io/blob/master/$BUILD_PRODUCTS_DIR/$CURRENT_BUILD_DEST_DIR/manifest.plist"
 
     sed -i '' -e "s/$NAME_REPLACE_STRING/$NAME/g" "$APP_BUILD_DATA_FILE"
     sed -i '' -e "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" "$APP_BUILD_DATA_FILE"
