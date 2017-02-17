@@ -49,6 +49,7 @@ rm "./buddybuild_postbuild.sh"
 cp "./defaults/default_buddybuild_postbuild.sh" "./buddybuild_postbuild.sh"
 
 sed -i '' -e "s/&&&NAME&&&/$name/g" "./buddybuild_postbuild.sh"
+sed -i '' -e "s/&&&BUNDLE_ID&&&/$bundle_id/g" "./buddybuild_postbuild.sh"
 
 mkdir -p "builds/$bundle_id/"
 
