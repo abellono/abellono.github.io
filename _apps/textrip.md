@@ -3,7 +3,7 @@ layout: default
 name: textrip
 title: Textrip
 description: App for scanning receipts
-bundle_id: no.abello.textrip
+bundle_id: no.abello.textrip-enterprise
 ---
 {% assign matching_builds = site.data | where: "bundle_id", page.bundle_id | group_by: "version" %}
 {% assign sorted_builds = matching_builds | sort: "name" | reverse %}
