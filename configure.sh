@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-if ! [[ "$PWD" == *abello-web ]]; then
-    echo "Please execute script from the root of the abello-web repository"
+if ! [[ "$PWD" == *abellono.github.io ]]; then
+    echo "Please execute script from the root of the abellono.github.io repository"
     exit
 fi
 
@@ -11,7 +11,7 @@ echo "I need a few things first...\n"
 echo "App Name :"
 read name
 
-name="$name" | tr '[:upper:]' '[:lower:]'
+name=$(echo "$name" | tr '[:upper:]' '[:lower:]')
 
 if [ -f "_apps/$name.md" ]; then
     echo "\n$name already exists. Please go to _apps/$name.md to edit its webpage.\n"
@@ -48,5 +48,9 @@ git push origin master
 rm "./buddybuild_postbuild.sh"
 cp "./defaults/default_buddybuild_postbuild.sh" "./buddybuild_postbuild.sh"
 
-echo "Please place the apps images (named 512.png and 57.png) inside ./builds/$bundle_id/."
-echo "\nDone! Cut the buddybuild_postbuild.sh script into the root directory of the repository you would like to start uploading to abello-web."
+sed -i '' -e "s/&&&NAME&&&/$name/g" "./buddybuild_postbuild.sh"
+
+mkdir -p "builds/$bundle_id/"
+
+echo "\nPlease place the app's images (named 512.png and 57.png) inside ./builds/$bundle_id/."
+echo "Done! Move the buddybuild_postbuild.sh target repository."
