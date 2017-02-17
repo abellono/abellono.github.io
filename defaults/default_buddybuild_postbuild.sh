@@ -2,6 +2,7 @@
 
 BRANCH_TO_UPLOAD="master"
 NAME=&&&NAME&&&
+EXPECTED_BUNDLE_ID=&&&BUNDLE_ID&&&
 
 # Make sure we are in the right directory
 cd "$BUDDYBUILD_WORKSPACE" || exit
@@ -16,6 +17,11 @@ if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
     BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print :ApplicationProperties:CFBundleVersion" "$INFO_PLIST_PATH")
     BUNDLE_IDENTIFIER=$(/usr/libexec/PlistBuddy -c "Print :ApplicationProperties:CFBundleIdentifier" "$INFO_PLIST_PATH")
 
+    if ! [ "$EXPECTED_BUNDLE_ID" == "$BUNDLE_IDENTIFIER" ]; then
+        echo "Bundle identifier $EXPECTED_BUNDLE_ID did not match the build's bundle identifier $BUNDLE_IDENTIFIER."
+        exit
+    fi
+
     UPLOAD_FOLDER_DIR="upload-to-github"
     BUILD_PRODUCTS_DIR="builds"
     BASE_REPO_PATH="$BUDDYBUILD_WORKSPACE"/"$UPLOAD_FOLDER_DIR"
@@ -24,6 +30,11 @@ if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
     # Create and change into upload folder that we will copy the IPA into
     git clone -b master --depth 1 git@github.com:abellono/abellono.github.io.git $UPLOAD_FOLDER_DIR
     cd $UPLOAD_FOLDER_DIR || exit
+
+    if ! [ -f "_apps/$NAME.md" ]; then
+        echo "Please use configure.sh in the abellono/abellono.github.io repository to set the app up before building it."
+        exit
+    fi
 
     # Create the build folder if it does not exist and cd into it
     [ -d $BUILD_PRODUCTS_DIR ] || mkdir $BUILD_PRODUCTS_DIR
@@ -69,30 +80,10 @@ if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
     sed -i '' -e "s|$MANIFEST_REPLACE_STRING|$MANIFEST_LOCATION|g" "$APP_BUILD_DATA_FILE"
     sed -i '' -e "s/$BUILD_NUMBER_REPLACE_STRING/$BUILD_NUMBER/g" "$APP_BUILD_DATA_FILE"
 
-    FIRST_BUILD=false
-
-    if ! [ -f "_apps/$NAME.md" ]; then
-        FIRST_BUILD=true
-
-        cp "./defaults/default_app_page.md" "_apps/$NAME.md"
-
-        echo "First time building app.... providing sensible defaults."
-
-        sed -i '' -e "s/$NAME_REPLACE_STRING/$NAME/g" "_apps/$NAME.md"
-        sed -i '' -e "s/@@@@PAGE_TITLE@@@@/$NAME/g" "_apps/$NAME.md"
-        sed -i '' -e "s/@@@@PAGE_DESCRIPTION@@@@/$NAME's app download page./g" "_apps/$NAME.md"
-        sed -i '' -e "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" "_apps/$NAME.md"
-    fi
-
     git add ./*
-
-    if $FIRST_BUILD ; then
-        git commit -m "Buddybuild: Uploaded IPA for $BUNDLE_IDENTIFIER -> $BUILD_VERSION.$BUILD_NUMBER (ATTENTION : PLEASE UPDATE THE APP'S WEBPAGE AT _apps/$NAME.md)"
-    else
-        git commit -m "Buddybuild: Uploaded IPA for $BUNDLE_IDENTIFIER -> $BUILD_VERSION.$BUILD_NUMBER"
-    fi
-
+    git commit -m "Buddybuild: Uploaded IPA for $BUNDLE_IDENTIFIER -> $BUILD_VERSION.$BUILD_NUMBER"
     git push origin master
+
 else
     echo "Not configured to upload to abellono.github.io on $BUDDYBUILD_BRANCH. Currently only uploading on $BRANCH_TO_UPLOAD"
 fi
