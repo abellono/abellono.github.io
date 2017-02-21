@@ -7,3 +7,5 @@ collections:
   apps:
     output: true
     permalink: /:collection/:name/index.html
+gems:
+  - octopress-debugger
