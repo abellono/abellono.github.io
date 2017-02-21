@@ -1,9 +1,9 @@
 ---
 layout: default
-name: textrip
-title: Textrip
-description: App for scanning receipts
-bundle_id: no.abello.textrip-enterprise
+name: receipts
+title: Roomservice Receipts
+description: Regenerate customer and restaurant receipts for Roomservice
+bundle_id: no.abello.roomservicedriverenterprise-receipts
 ---
 {% assign matching_builds = site.data | where: "bundle_id", page.bundle_id | group_by: "version" %}
 {% assign sorted_builds = matching_builds | sort: "name" | reverse %}
@@ -14,8 +14,8 @@ bundle_id: no.abello.textrip-enterprise
 <h1 class="center">No builds yet! :(</h1>
 {% else %}
 
-{% assign latest_version = sorted_builds | last %}
-{% assign latest_version_build = latest_version.items | sort % | first %}
+{% assign latest_version = sorted_builds | first %}
+{% assign latest_version_build = latest_version.items | sort "build" | first %}
 
 <h3 class="center">
     <a class="btn install" href="itms-services://?action=download-manifest&url={{ latest_version_build.manifest }}">Click here to download latest version!</a>
