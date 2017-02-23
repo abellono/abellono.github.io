@@ -20,7 +20,7 @@ function create_github_release {
 
 function upload_ipa_to_release {
 
-    FILE_NAME=$(basename "$BUDDYBUILD_IPA_PATH")
+    FILE_NAME=${BUDDYBUILD_IPA_PATH##*/}
     GH_ASSET="https://uploads.github.com/repos/$BUILD_REPO_NAME/releases/$id/assets"
 
     GH_ASSET_NAME="$GH_ASSET?name=$FILE_NAME"
@@ -51,7 +51,7 @@ function upload_ipa_to_release {
 function upload_manifest_to_release {
 
     PATH="./manifest.plist"
-    FILE_NAME=$(basename "$PATH")
+    FILE_NAME=${PATH##*/}
     GH_ASSET="https://uploads.github.com/repos/$BUILD_REPO_NAME/releases/$id/assets"
     GH_ASSET="$GH_ASSET?name=$FILE_NAME"
 
@@ -68,7 +68,13 @@ cd "$BUDDYBUILD_WORKSPACE" || exit
 
 if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
 
-    echo password | sudo -S gem install jsonpath
+    if ! which fastlane >/dev/null; then
+	    echo "Installing jsonpath..."
+        echo password | sudo -S gem install jsonpath
+    else
+    	echo "Updating jsonpath..."
+    	echo password | sudo -S gem update jsonpath
+    fi
 
     echo "Uploading $BUDDYBUILD_BRANCH."
 
@@ -116,8 +122,8 @@ if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
     sed -i '' -e "s/$BUNDLE_VERSION_REPLACE_STRING/$BUILD_VERSION/g" ./manifest.plist
     sed -i '' -e "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$BUNDLE_IDENTIFIER/g" ./manifest.plist
     sed -i '' -e "s/$NAME_REPLACE_STRING/$NAME/g" ./manifest.plist
-    sed -i '' -e "s/$SMALL_PICTURE_REPLACE_STRING/$small_image_download_url/g" ./manifest.plist
-    sed -i '' -e "s/$LARGE_PICTURE_REPLACE_STRING/$large_image_download_url/g" ./manifest.plist
+    sed -i '' -e "s|$SMALL_PICTURE_REPLACE_STRING|$small_image_download_url|g" ./manifest.plist
+    sed -i '' -e "s|$LARGE_PICTURE_REPLACE_STRING|$large_image_download_url|g" ./manifest.plist
 
     upload_manifest_to_release || exit
     rm ./manifest.plist
