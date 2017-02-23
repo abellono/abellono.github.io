@@ -68,7 +68,7 @@ cd "$BUDDYBUILD_WORKSPACE" || exit
 
 if [ "$BUDDYBUILD_BRANCH" == "$BRANCH_TO_UPLOAD" ]; then
 
-    if ! which fastlane >/dev/null; then
+    if ! which jsonpath >/dev/null; then
 	    echo "Installing jsonpath..."
         echo password | sudo -S gem install jsonpath
     else
