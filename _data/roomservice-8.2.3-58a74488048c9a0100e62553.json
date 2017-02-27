@@ -1,7 +1,0 @@
-{
-  "name" : "roomservice",
-  "bundle_id" : "no.abello.roomservicedriverenterprise",
-  "version" : "8.2",
-  "build" : "3",
-  "manifest" : "https://github.com/abellono/abellono.github.io/blob/master/builds/no.abello.roomservicedriverenterprise/8.2.3/58a74488048c9a0100e62553/manifest.plist"
-}
