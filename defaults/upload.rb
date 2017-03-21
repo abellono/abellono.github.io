@@ -2,7 +2,7 @@ gem 'octokit'
 
 require 'octokit'
 
-client = Octokit::Client.new(:access_token => "72f7a51915ffdbad8a48c8889edeb0afe25f795a")
+client = Octokit::Client.new(:access_token => "&&&KEY&&&")
 
 name = ARGV[0]
 version = ARGV[1]
