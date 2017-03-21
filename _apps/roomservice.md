@@ -16,8 +16,10 @@ bundle_id: no.abello.roomservicedriverenterprise
 {% assign picture_asset = latest_version.assets | where: "name", "57.png" | first %}
 
 <h3 class="center">
-	![pic]({{ picture_asset.browser_download_url }})
-    <a class="btn install" href="itms-services://?action=download-manifest&url={{ manifest_asset.browser_download_url }}">Click here to download latest version!</a>
+	<a class="btn install" href="itms-services://?action=download-manifest&url={{ manifest_asset.browser_download_url }}" style="text-align: center;">
+    	<img src="{{ picture_asset.browser_download_url }}"/>
+    	Click here to download latest version!
+	</a>
 </h3>
 
 ---
