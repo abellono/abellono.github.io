@@ -56,5 +56,7 @@ sed -i '' -e "s/&&&NAME&&&/$name/g" "./buddybuild_postbuild.sh"
 cp "./defaults/upload.rb" "./build/upload.rb"
 sed -i '' -e "s/&&&KEY&&&/$key/g" "./build/upload.rb"
 
+cp "./defaults/manifest_default.rb" "./build/manifest_default.plist"
+
 echo "Done! Move the build folder and buddybuild_postbuild.sh into the target repository."
 echo "Please place the app's images (named 512.png and 57.png) inside the build folder."
