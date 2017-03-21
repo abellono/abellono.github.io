@@ -13,17 +13,17 @@ bundle_id: @@@@BUNDLE_IDENTIFIER@@@@
 
 {% assign latest_version = matching_builds | first %}
 {% assign manifest_asset = latest_version.assets | where: "name", "manifest.plist" | first %}
+{% assign picture_asset = latest_version.assets | where: "name", "57.png" | first %}
 
 <h3 class="center">
+	![pic]({{ picture_asset.browser_download_url }})
     <a class="btn install" href="itms-services://?action=download-manifest&url={{ manifest_asset.browser_download_url }}">Click here to download latest version!</a>
 </h3>
 
 ---
-
-### Old Versions
-
-Builds | Install
-| :--- | ---: |{% for build in matching_builds %}{% assign manifest_asset = latest_version.assets | where: "name", "manifest.plist" | first %}
-{{ build.tag_name }} | [Install](itms-services://?action=download-manifest&url={{ manifest_asset.browser_download_url }})
-{% endfor %}
+<h3 class="center">
+Old Versions
+</h3>
+{% for build in matching_builds %}{% assign manifest_asset = latest_version.assets | where: "name", "manifest.plist" | first %}
+<h3 class="center"><a href="itms-services://?action=download-manifest&url={{ manifest_asset.browser_download_url }}">v{{build.tag_name}}</a></h3>{% endfor %}
 {% endif %}
