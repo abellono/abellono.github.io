@@ -27,6 +27,9 @@ read description
 echo "\nBundle Identifier :"
 read bundle_id
 
+echo "\nGithub Access Token (make sure it can access abellono/abellono.github.io) :"
+read key
+
 mkdir -p "./builds/$bundle_id"
 
 echo "\n"
@@ -42,16 +45,16 @@ sed -i '' -e "s/@@@@PAGE_DESCRIPTION@@@@/$description/g" "_apps/$name.md"
 sed -i '' -e "s/$BUNDLE_IDENTIFIER_REPLACE_STRING/$bundle_id/g" "_apps/$name.md"
 
 git add "_apps/$name.md"
-git commit -m "Added $name app"
+git commit -m "Added $name app."
 git push origin master
 
-rm "./buddybuild_postbuild.sh"
-cp "./defaults/default_buddybuild_postbuild.sh" "./buddybuild_postbuild.sh"
+rm -r "./build"
 
+cp "./defaults/buddybuild_postbuild.sh" "./buddybuild_postbuild.sh"
 sed -i '' -e "s/&&&NAME&&&/$name/g" "./buddybuild_postbuild.sh"
-sed -i '' -e "s/&&&BUNDLE_ID&&&/$bundle_id/g" "./buddybuild_postbuild.sh"
 
-mkdir -p "builds/$bundle_id/"
+cp "./defaults/upload.rb" "./build/upload.rb"
+sed -i '' -e "s/&&&KEY&&&/$key/g" "./build/upload.rb"
 
-echo "\nPlease place the app's images (named 512.png and 57.png) inside ./builds/$bundle_id/."
-echo "Done! Move the buddybuild_postbuild.sh target repository."
+echo "Done! Move the build folder and buddybuild_postbuild.sh into the target repository."
+echo "Please place the app's images (named 512.png and 57.png) inside the build folder."

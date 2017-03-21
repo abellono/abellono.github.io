@@ -1,7 +1,0 @@
-{
-  "name" : "@@@@NAME@@@@",
-  "bundle_id" : "@@@@BUNDLE_IDENTIFIER@@@@",
-  "version" : "@@@@VERSION@@@@",
-  "build" : "@@@@BUILD@@@@",
-  "manifest" : "@@@@MANIFEST@@@@"
-}
